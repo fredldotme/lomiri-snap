@@ -1,0 +1,211 @@
+name: cosmir
+base: core24
+summary: An attempt to make Cosmir DE running in Mir.
+description: |
+  An attempt to make Cosmic DE running in Mir.
+icon: session/usr/local/share/icons/gnome-control-center.png
+adopt-info: cosmic
+
+grade: devel
+confinement: classic
+
+platforms:
+  amd64:
+
+package-repositories:
+- type: apt
+  components: [main]
+  suites: [noble]
+  key-id: 63C46DF0140D738961429F4E204DD8AEC33A7AFF
+  url: http://apt.pop-os.org/staging/master
+
+apps:
+  cosmir:
+    command: usr/local/bin/cosmir
+    environment:
+      __EGL_VENDOR_LIBRARY_DIRS: $SNAP/etc/glvnd/egl_vendor.d:$SNAP/usr/share/glvnd/egl_vendor.d
+      LIBGL_DRIVERS_PATH: $SNAP/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/dri
+      LIBINPUT_QUIRKS_DIR: ${SNAP}/usr/share/libinput
+      XDG_CONFIG_DIRS: ${XDG_CONFIG_DIRS}:${SNAP}/usr/local/etc/xdg
+      MIR_SERVER_PLATFORM_PATH: ${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/mir/server-platform
+
+parts:
+  miriway:
+    plugin: nil
+    stage-snaps:
+      - miriway/edge
+    stage:
+      - -bin/miriway.vnc-server
+      - -example-configs
+      - -snap/hooks
+      - -usr/local/bin/miriway
+      - -usr/local/bin/miriway-unsnap
+      - -usr/local/bin/yambar
+      - -usr/local/etc
+      - -usr/local/include
+      - -usr/local/share
+      - -usr/bin/mir_*
+
+  cosmic:
+    after: [miriway]
+    plugin: nil
+    build-attributes:
+      - enable-patchelf
+    stage-packages:
+      - cosmic-session
+    stage:
+      - -usr/bin/Xwayland
+      - -usr/bin/fc-cache
+      - -usr/bin/fc-cat
+      - -usr/bin/fc-conflist
+      - -usr/bin/fc-list
+      - -usr/bin/fc-match
+      - -usr/bin/fc-pattern
+      - -usr/bin/fc-query
+      - -usr/bin/fc-scan
+      - -usr/bin/fc-validate
+      - -usr/bin/gtk-update-icon-cache
+      - -usr/bin/setxkbmap
+      - -usr/bin/update-mime-database
+      - -usr/bin/xkbbell
+      - -usr/bin/xkbcomp
+      - -usr/bin/xkbevd
+      - -usr/bin/xkbprint
+      - -usr/bin/xkbvleds
+      - -usr/bin/xkbwatch
+      - -usr/lib/*/gdk-pixbuf-2.0/*
+      - -usr/lib/*/gio/modules/libdconfsettings.so
+      - -usr/lib/*/gtk-3.0/*
+      - -usr/lib/*/libEGL.so.1.*
+      - -usr/lib/*/libEGL_mesa.so.0.*
+      - -usr/lib/*/libFLAC.so.12.*
+      - -usr/lib/*/libGL.so.1.*
+      - -usr/lib/*/libGLX.so.0.*
+      - -usr/lib/*/libGLX_mesa.so.0.*
+      - -usr/lib/*/libGLdispatch.so.0.*
+      - -usr/lib/*/libICE.so.6.*
+      - -usr/lib/*/libLLVM-17.so.1
+      - -usr/lib/*/libLerc.so.4
+      - -usr/lib/*/libSM.so.6.*
+      - -usr/lib/*/libX11.so.6.*
+      - -usr/lib/*/libXau.so.6.*
+      - -usr/lib/*/libXaw7.so.7.*
+      - -usr/lib/*/libXcomposite.so.1.*
+      - -usr/lib/*/libXcursor.so.1.*
+      - -usr/lib/*/libXdamage.so.1.*
+      - -usr/lib/*/libXdmcp.so.6.*
+      - -usr/lib/*/libXext.so.6.*
+      - -usr/lib/*/libXfixes.so.3.*
+      - -usr/lib/*/libXfont2.so.2.*
+      - -usr/lib/*/libXi.so.6.*
+      - -usr/lib/*/libXinerama.so.1.*
+      - -usr/lib/*/libXmu.so.6.*
+      - -usr/lib/*/libXpm.so.4.*
+      - -usr/lib/*/libXrandr.so.2.*
+      - -usr/lib/*/libXrender.so.1.*
+      - -usr/lib/*/libXt.so.6.*
+      - -usr/lib/*/libXxf86vm.so.1.*
+      - -usr/lib/*/libasound.so.2.*
+      - -usr/lib/*/libasyncns.so.0.*
+      - -usr/lib/*/libatk-1.0.so.0.*
+      - -usr/lib/*/libatk-bridge-2.0.so.0.*
+      - -usr/lib/*/libatspi.so.0.*
+      - -usr/lib/*/libavahi-client.so.3.*
+      - -usr/lib/*/libavahi-common.so.3.*
+      - -usr/lib/*/libcairo-gobject.so.2.*
+      - -usr/lib/*/libcairo.so.2.*
+      - -usr/lib/*/libcolord.so.2.*
+      - -usr/lib/*/libcolordprivate.so.2.*
+      - -usr/lib/*/libcups.so.2
+      - -usr/lib/*/libdatrie.so.1.*
+      - -usr/lib/*/libdconf.so.1.*
+      - -usr/lib/*/libdecor-0.so.0.*
+      - -usr/lib/*/libdeflate.so.0
+      - -usr/lib/*/libdrm_amdgpu.so.1.*
+      - -usr/lib/*/libdrm_intel.so.1.*
+      - -usr/lib/*/libdrm_nouveau.so.2.*
+      - -usr/lib/*/libdrm_radeon.so.1.*
+      - -usr/lib/*/libepoxy.so.0.*
+      - -usr/lib/*/libfontconfig.so.1.*
+      - -usr/lib/*/libfontenc.so.1.*
+      - -usr/lib/*/libfribidi.so.0.*
+      - -usr/lib/*/libgbm.so.1.*
+      - -usr/lib/*/libgdk-3.so.0.*
+      - -usr/lib/*/libgdk_pixbuf-2.0.so.0.*
+      - -usr/lib/*/libglapi.so.0.*
+      - -usr/lib/*/libgraphite2.so.3.*
+      - -usr/lib/*/libgtk-3-0t64/gtk-query-immodules-*
+      - -usr/lib/*/libgtk-3.so.0.*
+      - -usr/lib/*/libgudev-1.0.so.0.*
+      - -usr/lib/*/libharfbuzz.so.0.*
+      - -usr/lib/*/libicui18n.so.*
+      - -usr/lib/*/libicuio.so.*
+      - -usr/lib/*/libicutest.so.*
+      - -usr/lib/*/libicutu.so.*
+      - -usr/lib/*/libicuuc.so.*
+      - -usr/lib/*/libinput.so.10.*
+      - -usr/lib/*/libjbig.so.0
+      - -usr/lib/*/libjpeg.so.8.*
+      - -usr/lib/*/liblcms2.so.2.*
+      - -usr/lib/*/libmp3lame.so.0.*
+      - -usr/lib/*/libmpg123.so.0.*
+      - -usr/lib/*/libmtdev.so.1.*
+      - -usr/lib/*/libogg.so.0.*
+      - -usr/lib/*/libopus.so.0.*
+      - -usr/lib/*/libpango-1.0.so.0.*
+      - -usr/lib/*/libpangocairo-1.0.so.0.*
+      - -usr/lib/*/libpangoft2-1.0.so.0.*
+      - -usr/lib/*/libpciaccess.so.0.*
+      - -usr/lib/*/libpipewire-0.3.so.0
+      - -usr/lib/*/libpixman-1.so.0.*
+      - -usr/lib/*/libpulse-simple.so.0.*
+      - -usr/lib/*/libpulse.so.0.*
+      - -usr/lib/*/libsensors.so.5.*
+      - -usr/lib/*/libsharpyuv.so.0.*
+      - -usr/lib/*/libsndfile.so.1.*
+      - -usr/lib/*/libthai.so.0.*
+      - -usr/lib/*/libtiff.so.6.*
+      - -usr/lib/*/libvorbis.so.0.*
+      - -usr/lib/*/libvorbisenc.so.2.*
+      - -usr/lib/*/libvulkan.so.1
+      - -usr/lib/*/libwacom.so.9.*
+      - -usr/lib/*/libwayland-client.so.0.*
+      - -usr/lib/*/libwayland-cursor.so.0.*
+      - -usr/lib/*/libwayland-egl.so.1.*
+      - -usr/lib/*/libwayland-server.so.0.*
+      - -usr/lib/*/libwebp.so.7.*
+      - -usr/lib/*/libwebrtc_audio_processing.so.1.*
+      - -usr/lib/*/libxcb-dri2.so.0.*
+      - -usr/lib/*/libxcb-dri3.so.0.*
+      - -usr/lib/*/libxcb-glx.so.0.*
+      - -usr/lib/*/libxcb-present.so.0.*
+      - -usr/lib/*/libxcb-randr.so.0.*
+      - -usr/lib/*/libxcb-render.so.0.*
+      - -usr/lib/*/libxcb-shm.so.0.*
+      - -usr/lib/*/libxcb-sync.so.1.*
+      - -usr/lib/*/libxcb-xfixes.so.0.*
+      - -usr/lib/*/libxcb.so.1.*
+      - -usr/lib/*/libxcvt.so.0.*
+      - -usr/lib/*/libxkbfile.so.1.*
+      - -usr/lib/*/libxml2.so.2.*
+      - -usr/lib/*/libxshmfence.so.1.*
+      - -usr/lib/*/pkgconfig/xwayland.pc
+      - -usr/lib/*/pulseaudio/libpulsecommon-16.1.so
+      - -usr/lib/*/spa-0.2/*
+      - -usr/libexec/dconf-service
+      - -usr/share/applications/org.freedesktop.Xwayland.desktop
+      - -usr/share/doc/libpipewire-0.3-0t64/changelog.Debian.gz
+      - -usr/share/doc/libspa-0.2-modules/changelog.Debian.gz
+      - -usr/share/doc/libvulkan1/changelog.Debian.gz
+      - -usr/share/doc/xwayland/changelog.Debian.gz
+      - -usr/share/man/man1/Xwayland.1.gz
+    override-stage: |
+      craftctl default
+      miriway_version=$( awk '/^version:/ { print $2 }' ${CRAFT_STAGE}/meta.miriway/snap.yaml )
+      miriway_version=${miriway_version#*-g}
+      cosmic_version=$( dpkg-parsechangelog --file ${CRAFT_STAGE}/usr/share/doc/cosmic-session/changelog* --show-field=Version )
+      craftctl set version=${cosmic_version::16}-m${miriway_version::14}
+
+  cosmir:
+    plugin: dump
+    source: session

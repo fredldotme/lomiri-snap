@@ -1,0 +1,12 @@
+#! /bin/bash
+set -e
+if [ "$SNAP_NAME" == "cosmir" ]; then
+  unset __EGL_VENDOR_LIBRARY_DIRS
+  unset LIBGL_DRIVERS_PATH
+  unset LIBINPUT_QUIRKS_DIR
+  unset GIO_MODULE_DIR
+  unset GSETTINGS_SCHEMA_DIR
+
+  PATH="$(echo "$PATH" | sed "s#$SNAP[^:]*:##g")"
+fi
+exec "$@"

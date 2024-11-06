@@ -1,0 +1,18 @@
+#!/bin/bash -xeu
+
+declare -A ARCH_TRIPLETS=(
+    [amd64]=x86_64-linux-gnu
+)
+
+# $SNAP when inside a parallel install loses the instance key,
+# so bring it back when we need it outside the snap.
+SNAP_PATH=${SNAP/$SNAP_NAME/$SNAP_INSTANCE_NAME}
+
+# Maintain a custom per-instance session (suffixed with " (instance key)").
+mkdir -p /usr/share/wayland-sessions/
+sed \
+    -e "s!%SNAP_PATH%!${SNAP_PATH}!g" \
+    -e "s!%SNAP_INSTANCE_NAME%!${SNAP_INSTANCE_NAME}!g" \
+    -e "s!%SNAP_SESSION_SUFFIX%!${SNAP_INSTANCE_KEY:+ ($SNAP_INSTANCE_KEY)}!g" \
+    "${SNAP}/usr/local/share/wayland-sessions/cosmir.desktop.in" \
+    > "/usr/share/wayland-sessions/${SNAP_INSTANCE_NAME}.desktop"
