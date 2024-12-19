@@ -1,27 +1,29 @@
-name: cosmir
+name: lomiri
 base: core24
-summary: An attempt to make Cosmir DE running in Mir.
+summary: A convergent UI for all kinds of devices
 description: |
-  An attempt to make Cosmic DE running in Mir.
+  Lomiri Desktop Environment
 icon: session/usr/local/share/icons/gnome-control-center.png
-adopt-info: cosmic
+adopt-info: lomiri
 
 grade: devel
 confinement: classic
 
 platforms:
   amd64:
+  arm64:
+  armhf:
 
-package-repositories:
-- type: apt
-  components: [main]
-  suites: [noble]
-  key-id: 63C46DF0140D738961429F4E204DD8AEC33A7AFF
-  url: http://apt.pop-os.org/staging/master
+#package-repositories:
+#- type: apt
+#  components: [main]
+#  suites: [noble]
+#  key-id: 63C46DF0140D738961429F4E204DD8AEC33A7AFF
+#  url: http://repo2.ubports.com/
 
 apps:
-  cosmir:
-    command: usr/local/bin/cosmir
+  lomiri:
+    command: usr/bin/lomiri --mode=shell
     environment:
       __EGL_VENDOR_LIBRARY_DIRS: $SNAP/etc/glvnd/egl_vendor.d:$SNAP/usr/share/glvnd/egl_vendor.d
       LIBGL_DRIVERS_PATH: $SNAP/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/dri
@@ -29,30 +31,25 @@ apps:
       XDG_CONFIG_DIRS: ${XDG_CONFIG_DIRS}:${SNAP}/usr/local/etc/xdg
       MIR_SERVER_PLATFORM_PATH: ${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/mir/server-platform
 
-parts:
-  miriway:
-    plugin: nil
-    stage-snaps:
-      - miriway/edge
-    stage:
-      - -bin/miriway.vnc-server
-      - -example-configs
-      - -snap/hooks
-      - -usr/local/bin/miriway
-      - -usr/local/bin/miriway-unsnap
-      - -usr/local/bin/yambar
-      - -usr/local/etc
-      - -usr/local/include
-      - -usr/local/share
-      - -usr/bin/mir_*
+plugs:
+    gpu-2404:
+        interface: content
+        target: $SNAP/graphics
+        default-provider: mesa-2404
+    lomiri-ui-toolkit:
+        interface: content
+        target: $SNAP/lomiri-ui-toolkit
+        default-provider: lomiri-ui-toolkit-core24
 
-  cosmic:
-    after: [miriway]
+parts:
+  lomiri:
     plugin: nil
     build-attributes:
       - enable-patchelf
+    build-snaps:
+      - lomiri-ui-toolkit-core24
     stage-packages:
-      - cosmic-session
+      - lomiri-desktop-session
     stage:
       - -usr/bin/Xwayland
       - -usr/bin/fc-cache
@@ -201,11 +198,9 @@ parts:
       - -usr/share/man/man1/Xwayland.1.gz
     override-stage: |
       craftctl default
-      miriway_version=$( awk '/^version:/ { print $2 }' ${CRAFT_STAGE}/meta.miriway/snap.yaml )
-      miriway_version=${miriway_version#*-g}
-      cosmic_version=$( dpkg-parsechangelog --file ${CRAFT_STAGE}/usr/share/doc/cosmic-session/changelog* --show-field=Version )
-      craftctl set version=${cosmic_version::16}-m${miriway_version::14}
+      lomiri_version=$( dpkg-parsechangelog --file ${CRAFT_STAGE}/usr/share/doc/lomiri-desktop-session/changelog* --show-field=Version )
+      craftctl set version=${lomiri_version::14}
 
-  cosmir:
+  lomiri:
     plugin: dump
     source: session

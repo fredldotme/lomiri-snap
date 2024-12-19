@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e
-if [ "$SNAP_NAME" == "cosmir" ]; then
+if [ "$SNAP_NAME" == "lomiri" ]; then
   unset __EGL_VENDOR_LIBRARY_DIRS
   unset LIBGL_DRIVERS_PATH
   unset LIBINPUT_QUIRKS_DIR
@@ -9,4 +9,5 @@ if [ "$SNAP_NAME" == "cosmir" ]; then
 
   PATH="$(echo "$PATH" | sed "s#$SNAP[^:]*:##g")"
 fi
+
 exec "$@"
