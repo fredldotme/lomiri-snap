@@ -14,5 +14,5 @@ sed \
     -e "s!%SNAP_PATH%!${SNAP_PATH}!g" \
     -e "s!%SNAP_INSTANCE_NAME%!${SNAP_INSTANCE_NAME}!g" \
     -e "s!%SNAP_SESSION_SUFFIX%!${SNAP_INSTANCE_KEY:+ ($SNAP_INSTANCE_KEY)}!g" \
-    "${SNAP}/usr/local/share/wayland-sessions/cosmir.desktop.in" \
+    "${SNAP}/usr/local/share/wayland-sessions/lomiri.desktop.in" \
     > "/usr/share/wayland-sessions/${SNAP_INSTANCE_NAME}.desktop"

@@ -31,23 +31,11 @@ apps:
       XDG_CONFIG_DIRS: ${XDG_CONFIG_DIRS}:${SNAP}/usr/local/etc/xdg
       MIR_SERVER_PLATFORM_PATH: ${SNAP}/usr/lib/${CRAFT_ARCH_TRIPLET_BUILD_FOR}/mir/server-platform
 
-plugs:
-    gpu-2404:
-        interface: content
-        target: $SNAP/graphics
-        default-provider: mesa-2404
-    lomiri-ui-toolkit:
-        interface: content
-        target: $SNAP/lomiri-ui-toolkit
-        default-provider: lomiri-ui-toolkit-core24
-
 parts:
   lomiri:
     plugin: nil
     build-attributes:
       - enable-patchelf
-    build-snaps:
-      - lomiri-ui-toolkit-core24
     stage-packages:
       - lomiri-desktop-session
     stage:
@@ -70,6 +58,7 @@ parts:
       - -usr/bin/xkbprint
       - -usr/bin/xkbvleds
       - -usr/bin/xkbwatch
+      - -usr/bin/lomiri
       - -usr/lib/*/gdk-pixbuf-2.0/*
       - -usr/lib/*/gio/modules/libdconfsettings.so
       - -usr/lib/*/gtk-3.0/*

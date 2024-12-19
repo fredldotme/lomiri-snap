@@ -1,0 +1,5 @@
+[Desktop Entry]
+Name=Lomiri DE on Mir%SNAP_SESSION_SUFFIX%
+Comment=A convergent environment
+Exec=env SNAP_PATH=%SNAP_PATH% SNAP_INSTANCE_NAME=%SNAP_INSTANCE_NAME% sh -l -c %SNAP_PATH%/usr/local/bin/lomiri-session
+Type=Application
